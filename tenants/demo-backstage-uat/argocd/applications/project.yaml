@@ -9,7 +9,7 @@ spec:
   # Source repositories that applications in this project can pull from
   sourceRepos:
     - 'https://github.com/lucky29-git/Omnix'  # Helm chart repository
-    - 'https://github.com/AppointyTech/platform-middleclients-gitops'  # GitOps repository
+    - 'https://github.com/chandrashekhar-appointy/platform-middleclients-gitops'  # GitOps repository
 
   # Destinations where applications can be deployed
   destinations:
