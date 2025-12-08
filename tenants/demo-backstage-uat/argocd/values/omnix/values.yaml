@@ -1,0 +1,106 @@
+# Simplified Omnix Helm Chart Values for Testing
+# This configuration deploys a basic nginx container with minimal settings
+
+# Application naming
+nameOverride: ""
+fullnameOverride: demo-omnix-app
+namespaceOverride: "uat"
+
+# Global labels applied to all resources
+global:
+  labels:
+    app: demo-omnix
+    environment: uat
+    managed-by: argocd
+
+# Deployment configuration
+deployment:
+  labels:
+    deployment-type: test
+  annotations:
+    description: "Demo deployment for Backstage ArgoCD integration testing"
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+# Pod configuration
+pod:
+  labels:
+    app: demo-omnix
+  annotations:
+    description: "Test pod for ArgoCD"
+
+# Number of replicas
+replicaCount: 1
+
+# No image pull secrets needed for public images
+imagePullSecrets: {}
+
+# Service account - disabled for simplicity
+serviceAccount:
+  enable: false
+
+# Pod security context - not needed for basic test
+securityContext: []
+
+# Node selector - not needed for test
+nodeSelector: []
+
+# Volumes - not needed for basic test
+volumes: {}
+
+# Container image configuration
+image:
+  name: nginx  # Using nginx as a simple test application
+  tag: alpine  # Lightweight Alpine-based image
+  pullPolicy: IfNotPresent
+
+# No custom command needed
+containerCmd: {}
+
+# No custom arguments needed
+containerArgs: {}
+
+# Container ports
+ports:
+  http: 80
+
+# Direct environment variables (none needed for nginx test)
+env: []
+
+# Environment variables from ConfigMaps/Secrets (none needed)
+envFrom: {}
+
+# Resource requests and limits (minimal for testing)
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+# Container security context - not needed for basic test
+containerSecurityContext: []
+
+# Liveness probe - disabled for simplicity
+livenessProbe:
+  enable: false
+
+# Readiness probe - disabled for simplicity
+readinessProbe:
+  enable: false
+
+# Kubernetes Service configuration
+service:
+  type: ClusterIP  # Internal-only service for testing
+
+# Horizontal Pod Autoscaler - disabled
+hpa:
+  enable: false
+
+# Pod Disruption Budget - disabled
+pdb:
+  enable: false

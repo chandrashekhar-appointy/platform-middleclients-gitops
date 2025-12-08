@@ -1,0 +1,57 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: demo-backstage-omnix
+  namespace: argocd
+  labels:
+    client: demo-backstage
+    environment: uat
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  # Project this application belongs to
+  project: demo-backstage-uat
+
+  # Multiple sources pattern: Helm chart + custom values
+  sources:
+    # Source 1: Omnix Helm chart from GitHub
+    - repoURL: https://github.com/lucky29-git/Omnix
+      targetRevision: main
+      path: helm/omnix-chart
+      helm:
+        valueFiles:
+          - $values/tenants/demo-backstage-uat/argocd/values/omnix/values.yaml
+
+    # Source 2: Custom values from GitOps repository
+    - repoURL: https://github.com/AppointyTech/platform-middleclients-gitops
+      targetRevision: main
+      ref: values
+
+  # Destination cluster and namespace
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: uat
+
+  # Sync policy configuration
+  syncPolicy:
+    automated:
+      prune: true  # Delete resources that are no longer in Git
+      selfHeal: true  # Automatically sync when cluster state differs from Git
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true  # Automatically create namespace if it doesn't exist
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  # Ignore differences in certain fields (optional)
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas  # Ignore replica count changes (useful with HPA)

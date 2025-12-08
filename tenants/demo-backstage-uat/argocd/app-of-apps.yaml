@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: demo-backstage-uat-apps
+  namespace: argocd
+  labels:
+    client: demo-backstage
+    environment: uat
+    app-type: app-of-apps
+  annotations:
+    argocd.argoproj.io/sync-wave: "-100"  # Deploy first (before all other apps)
+spec:
+  # This is the "manager" application that creates other applications
+  project: default  # App-of-Apps uses default project, manages demo-backstage-uat project
+
+  # Source: Watch the applications folder in the GitOps repo
+  source:
+    repoURL: https://github.com/AppointyTech/platform-middleclients-gitops
+    targetRevision: main
+    path: tenants/demo-backstage-uat/argocd/applications  # Watch this folder for Application YAMLs
+
+  # Destination: Create Applications in the argocd namespace
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd  # All ArgoCD Applications live in argocd namespace
+
+  # Sync policy: Automatically create/update/delete Applications based on Git
+  syncPolicy:
+    automated:
+      prune: true       # Delete Applications that are removed from Git
+      selfHeal: true    # Automatically fix drift
+      allowEmpty: false # Prevent accidental deletion of all apps
+    syncOptions:
+      - CreateNamespace=false  # argocd namespace already exists
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  # Health check: The App-of-Apps is healthy when all managed Applications are synced
+  ignoreDifferences: []

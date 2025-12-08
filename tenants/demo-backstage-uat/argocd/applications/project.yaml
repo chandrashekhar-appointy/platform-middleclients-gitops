@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: demo-backstage-uat
+  namespace: argocd
+spec:
+  description: Demo Backstage Component - UAT Environment (Testing ArgoCD Integration)
+
+  # Source repositories that applications in this project can pull from
+  sourceRepos:
+    - 'https://github.com/lucky29-git/Omnix'  # Helm chart repository
+    - 'https://github.com/AppointyTech/platform-middleclients-gitops'  # GitOps repository
+
+  # Destinations where applications can be deployed
+  destinations:
+    - namespace: 'uat'  # Allow deployment to uat namespace
+      server: 'https://kubernetes.default.svc'  # Deploy to the same cluster where ArgoCD is running
+    - namespace: 'demo-backstage-uat'  # Alternative namespace option
+      server: 'https://kubernetes.default.svc'
+
+  # Cluster resource allow list (what cluster-scoped resources can be created)
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+
+  # Namespace resource allow list (what namespace-scoped resources can be created)
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+
+  # Orphaned resources monitoring
+  orphanedResources:
+    warn: true

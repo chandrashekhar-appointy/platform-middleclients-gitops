@@ -1,0 +1,30 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.bak
+*.log
+
+# Secrets (never commit secrets!)
+*.key
+*.pem
+secrets/
+.env
+.env.local
+
+# Helm
+charts/
+*.tgz

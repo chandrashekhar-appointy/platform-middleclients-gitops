@@ -1,0 +1,44 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: demo-backstage-uat
+  title: Demo Backstage Component - UAT
+  description: Test component to demonstrate ArgoCD and Backstage integration using Omnix Helm chart
+
+  annotations:
+    # GitHub Integration
+    github.com/project-slug: AppointyTech/platform-middleclients-gitops
+
+    # ArgoCD Integration - THIS MAKES THE ARGOCD TAB APPEAR!
+    # Shows both the App-of-Apps manager and the actual workload application
+    argocd/app-name: demo-backstage-uat-apps,demo-backstage-omnix
+    argocd/instance-name: argoInstance  # Must match the name in app-config.yaml
+
+    # Kubernetes Integration (for when you install the Kubernetes plugin)
+    backstage.io/kubernetes-id: demo-backstage-uat
+    backstage.io/kubernetes-namespace: uat
+    backstage.io/kubernetes-label-selector: 'app=demo-omnix'
+
+  tags:
+    - test
+    - demo
+    - argocd
+    - omnix
+    - uat
+
+  links:
+    - url: https://github.com/AppointyTech/platform-middleclients-gitops/tree/main/tenants/demo-backstage-uat
+      title: GitOps Configuration
+      icon: github
+    - url: https://localhost:8080/applications/demo-backstage-omnix
+      title: ArgoCD Application
+      icon: dashboard
+    - url: https://github.com/lucky29-git/Omnix
+      title: Omnix Helm Chart
+      icon: docs
+
+spec:
+  type: service
+  lifecycle: experimental
+  owner: platform-team
+  system: demo-system
