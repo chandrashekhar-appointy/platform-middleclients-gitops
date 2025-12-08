@@ -17,7 +17,7 @@ spec:
     # Source 1: Omnix Helm chart from GitHub
     - repoURL: https://github.com/lucky29-git/Omnix
       targetRevision: main
-      path: helm/omnix-chart
+      path: .
       helm:
         valueFiles:
           - $values/tenants/demo-backstage-uat/argocd/values/omnix/values.yaml
