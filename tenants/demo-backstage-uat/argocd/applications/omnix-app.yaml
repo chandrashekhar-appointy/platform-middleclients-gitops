@@ -23,7 +23,7 @@ spec:
           - $values/tenants/demo-backstage-uat/argocd/values/omnix/values.yaml
 
     # Source 2: Custom values from GitOps repository
-    - repoURL: https://github.com/AppointyTech/platform-middleclients-gitops
+    - repoURL: https://github.com/chandrashekhar-appointy/platform-middleclients-gitops
       targetRevision: main
       ref: values
 

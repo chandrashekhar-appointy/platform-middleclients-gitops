@@ -7,7 +7,7 @@ metadata:
 
   annotations:
     # GitHub Integration
-    github.com/project-slug: AppointyTech/platform-middleclients-gitops
+    github.com/project-slug: chandrashekhar-appointy/platform-middleclients-gitops
 
     # ArgoCD Integration - THIS MAKES THE ARGOCD TAB APPEAR!
     # Shows both the App-of-Apps manager and the actual workload application

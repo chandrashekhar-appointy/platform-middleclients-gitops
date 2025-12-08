@@ -15,7 +15,7 @@ spec:
 
   # Source: Watch the applications folder in the GitOps repo
   source:
-    repoURL: https://github.com/AppointyTech/platform-middleclients-gitops
+    repoURL: https://github.com/chandrashekhar-appointy/platform-middleclients-gitops
     targetRevision: main
     path: tenants/demo-backstage-uat/argocd/applications  # Watch this folder for Application YAMLs
 
