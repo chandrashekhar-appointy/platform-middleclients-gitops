@@ -12,6 +12,7 @@ global:
     app: demo-omnix
     environment: uat
     managed-by: argocd
+    testing: hello
 
 # Deployment configuration
 deployment:
