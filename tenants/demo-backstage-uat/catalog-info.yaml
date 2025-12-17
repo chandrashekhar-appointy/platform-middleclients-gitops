@@ -2,7 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: demo-backstage-uat
-  title: Demo Backstage Component - UAT
+  title: Argo application 
   description: Test component to demonstrate ArgoCD and Backstage integration using Omnix Helm chart
 
   annotations:
