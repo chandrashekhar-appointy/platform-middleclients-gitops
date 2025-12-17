@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: demo-backstage-uat-apps
+  name: client-app-of-apps
   namespace: argocd
   labels:
     client: demo-backstage
