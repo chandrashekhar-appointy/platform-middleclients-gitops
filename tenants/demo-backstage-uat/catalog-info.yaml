@@ -2,7 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: demo-backstage-uat
-  title: Argo application 
+  title: Argo application
   description: Test component to demonstrate ArgoCD and Backstage integration using Omnix Helm chart
 
   annotations:
@@ -11,7 +11,7 @@ metadata:
 
     # ArgoCD Integration - THIS MAKES THE ARGOCD TAB APPEAR!
     # Shows both the App-of-Apps manager and the actual workload application
-    argocd/app-name: demo-backstage-uat-apps
+    argocd/app-name: demo-backstage-uat-apps,demo-backstage-omnix
     argocd/instance-name: argoInstance  # Must match the name in app-config.yaml
 
     # Kubernetes Integration (for when you install the Kubernetes plugin)
