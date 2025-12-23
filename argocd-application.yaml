@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: devplatform
+  namespace: argocd
+  labels:
+    owner: "platform-team"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/chandrashekhar-appointy/platform-middleclients-gitops.git
+    targetRevision: HEAD
+    path: charts/app
+    helm:
+      valueFiles:
+        - ../../tenants/demo-backstage-uat/argocd/values/devplatform/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: devplatform
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      createNamespace: true
