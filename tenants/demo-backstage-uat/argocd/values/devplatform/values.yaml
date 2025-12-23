@@ -1,7 +1,7 @@
 replicaCount: 1
 image:
   repository: us-central1-docker.pkg.dev/focal-psyche-460009-a5/bifrost/devplatform
-  tag: 6bfb602
+  tag: latest # This will be updated by Cloud Build
   pullPolicy: IfNotPresent
 service:
   type: ClusterIP
