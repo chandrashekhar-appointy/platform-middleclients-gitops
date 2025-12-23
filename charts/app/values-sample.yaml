@@ -1,0 +1,18 @@
+replicaCount: 1
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  subdomain: demo
+  # baseUrl is saastack.site as requested
+  baseUrl: saastack.site
+
+resources: {}
