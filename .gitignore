@@ -26,5 +26,4 @@ secrets/
 .env.local
 
 # Helm
-charts/
 *.tgz
