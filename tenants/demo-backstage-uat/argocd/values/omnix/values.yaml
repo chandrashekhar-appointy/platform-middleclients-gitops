@@ -31,9 +31,9 @@ deployment:
 pod:
   labels:
     app: demo-omnix
+    backstage.io/kubernetes-id: demo-service
   annotations:
     description: "Test pod for ArgoCD"
-    backstage.io/kubernetes-id: demo-service
 
 # Number of replicas
 replicaCount: 1
