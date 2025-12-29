@@ -19,8 +19,9 @@ global:
 deployment:
   labels:
     deployment-type: test
+    backstage.io/kubernetes-id: demo-service
   annotations:
-    description: "Demo deployment for Backstage ArgoCD integration testing"
+    description: "Demo deployment for Backstage ArgoCD integration testinggg"
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -32,7 +33,6 @@ pod:
   labels:
     app: demo-omnix
     backstage.io/kubernetes-id: demo-service
-    hello: bye
   annotations:
     description: "Test pod for ArgoCD"
 
