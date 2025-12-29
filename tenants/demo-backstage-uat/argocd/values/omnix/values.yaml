@@ -13,6 +13,7 @@ global:
     environment: uat
     managed-by: argocd
     testing: hello
+    backstage.io/kubernetes-id: demo-service
 
 # Deployment configuration
 deployment:
