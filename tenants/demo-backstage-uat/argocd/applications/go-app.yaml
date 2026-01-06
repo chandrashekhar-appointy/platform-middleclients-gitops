@@ -16,7 +16,7 @@ spec:
         - ../../tenants/demo-backstage-uat/argocd/values/go-app.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: backstage
+    namespace: uat
   syncPolicy:
     automated:
       prune: true
