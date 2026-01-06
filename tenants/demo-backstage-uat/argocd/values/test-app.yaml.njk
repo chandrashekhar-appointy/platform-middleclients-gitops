@@ -1,0 +1,22 @@
+nameOverride: {{ values.appName }}
+fullnameOverride: {{ values.appName }}
+
+service:
+
+  ports:
+    
+    - name: {{ item.name }}
+      port: {{ item.port }}
+      targetPort: {{ item.port }}
+    
+
+
+# virtualService:
+#   hosts:
+#     - {{ values.subdomain }}
+  
+env:
+  
+  - name: {{ item.key }}
+    value: "{{ item.value }}"
+  
