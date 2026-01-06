@@ -1,0 +1,22 @@
+nameOverride: testing-go-ap
+fullnameOverride: testing-go-ap
+
+service:
+
+  ports:
+    
+    - name: http
+      port: 8079
+      targetPort: 8079
+    
+
+
+# virtualService:
+#   hosts:
+#     - 
+  
+env:
+  
+  - name: asdf
+    value: "asdf"
+  
