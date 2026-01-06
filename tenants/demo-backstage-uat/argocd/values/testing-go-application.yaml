@@ -1,0 +1,19 @@
+nameOverride: testing-go-application
+fullnameOverride: testing-go-application
+
+service:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+    - name: grpc
+      port: 50051
+      targetPort: 50051
+
+# virtualService:
+#   hosts:
+#     - 
+  
+env:
+  testing: "application"
+  hola: "amigos"
