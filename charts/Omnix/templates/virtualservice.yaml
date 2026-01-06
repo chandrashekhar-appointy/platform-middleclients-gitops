@@ -1,0 +1,33 @@
+{{- if .Values.virtualService.enabled -}}
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ include "omnix.fullname" . }}
+  namespace: {{ include "omnix.namespace" . }}
+  labels:
+    app: {{ include "omnix.fullname" . }}
+    {{- if .Values.global.labels }}
+    {{- toYaml .Values.global.labels | nindent 4 }}
+    {{- end }}
+spec:
+  gateways:
+    - {{ .Values.virtualService.gateway }}
+  hosts:
+  {{- if .Values.virtualService.hosts }}
+  {{- toYaml .Values.virtualService.hosts | nindent 2 }}
+  {{- else }}
+  - {{ include "omnix.fullname" . }}
+  {{- end }}
+  http:
+  {{- if .Values.virtualService.http }}
+  {{- toYaml .Values.virtualService.http | nindent 2 }}
+  {{- end }}
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: {{ include "omnix.fullname" . }}
+        port:
+          number: {{ .Values.ports.http }}
+{{- end }}

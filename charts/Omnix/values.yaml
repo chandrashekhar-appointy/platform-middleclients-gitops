@@ -1,0 +1,204 @@
+# Helm Chart Example - Demonstrates all available features
+
+# Basic naming configuration
+nameOverride: ""
+fullnameOverride: my-go-app
+namespaceOverride: ""
+
+# Global labels applied to all resources
+global:
+  labels: {}
+    # application: my-app
+    # environment: production
+
+# Deployment configuration
+deployment:
+  serviceAccountName: ""  # Optional: custom service account name, defaults to fullname
+  labels: {}
+    # deployment-label: custom-deployment
+  annotations:
+    description: "Example deployment"
+  strategy:
+    type: RollingUpdate  # Options: RollingUpdate, Recreate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+
+# Pod configuration
+pod: 
+  labels: {}
+    # pod-label: custom-pod
+    # hello: hii
+  annotations: {}
+    # prometheus.io/scrape: "true"
+
+# Number of replicas
+replicaCount: 1
+
+# Image pull secrets for private registries - Manually deploy it.
+imagePullSecrets: {}
+  # - name: gcp-pull-secret       
+
+# Service account configuration
+serviceAccount:
+  enable: false
+  labels:
+    sa-label: custom-sa
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::123456789:role/my-role
+  automountServiceAccountToken: true
+
+# Pod security context
+securityContext: []
+  # runAsUser: 1000
+  # runAsGroup: 3000
+  # fsGroup: 2000
+
+# Node selector for pod placement
+nodeSelector: []
+  # workload: general-purpose
+  # zone: us-west-1a
+
+# Volumes - Mount files from chart's files/ directory
+volumes: {}
+  # - name: nginx-config
+  #   type: configMap
+  #   mountPath: /etc/nginx/nginx.conf
+  #   subPath: nginx.conf
+  #   files:
+  #     - key: nginx.conf
+  #       path: files/configmap/nginx.conf
+
+  # - name: ssl-certs
+  #   type: configMap
+  #   mountPath: /etc/ssl/certs
+  #   files:
+  #     - key: cert.pem
+  #       path: files/configmap/ssl/cert.pem
+  #     - key: key.pem
+  #       path: files/configmap/ssl/key.pem
+
+# Container image configuration
+image:
+  name: us-central1-docker.pkg.dev/focal-psyche-460009-a5/bifrost/go-api
+  tag: v1
+  # pullPolicy: IfNotPresent
+
+# Override container command
+containerCmd: {}
+  # - "/bin/sh"
+  # - "-c"
+  # - "echo Starting application && exec nginx -g 'daemon off;'"
+
+# Container arguments
+containerArgs: {}
+  # - "--config=/etc/config/app.conf"
+
+# Container ports
+ports:
+  http: 8080
+  # https: 443
+  grpc: 50051
+
+# Direct environment variables (key-value pairs)
+env: []
+  # LOG_LEVEL: "info"
+  # ENVIRONMENT: "production"
+  # FEATURE_FLAG_ENABLED: "true"
+
+# Environment variables from ConfigMaps/Secrets
+# Files should be in YAML format in files/ directory
+envFrom: 
+  # Load all keys from ConfigMap as environment variables
+  - name: app-config
+    type: configMap
+    files:
+      - path: files/configmap/app-config.yaml
+
+  # # Load all keys from Secret as environment variables
+  # - name: app-secrets
+  #   type: secret
+  #   secretType: Opaque  # Optional, defaults to Opaque
+  #   files:
+  #     - path: files/secrets/app-secret.yaml
+
+# Resource requests and limits
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+# Container security context
+containerSecurityContext: []
+  # runAsUser: 2000
+  # readOnlyRootFilesystem: true
+  # allowPrivilegeEscalation: false
+  # capabilities:
+  #   drop:
+  #     - ALL
+
+# Liveness probe - checks if container is alive
+livenessProbe:
+  enable: false
+  httpGet:
+    path: /healthz
+    port: 8080
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# Readiness probe - checks if container is ready to serve traffic
+readinessProbe:
+  enable: false
+  httpGet:
+    path: /ready
+    port: 8080
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+# Kubernetes Service configuration
+service:
+  type: ClusterIP  # Options: ClusterIP, NodePort, LoadBalancer
+
+# Horizontal Pod Autoscaler - auto-scale based on metrics
+hpa:
+  enable: false
+  labels:
+    hpa-label: custom-hpa
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+# Pod Disruption Budget - ensures minimum availability during disruptions
+pdb:
+  enable: false
+  labels:
+    pdb-label: custom-pdb
+  annotations:
+    description: "Ensures high availability"
+  minAvailable: 1  # Minimum pods that must be available
+  maxUnavailable: ""  # Alternative: maximum pods that can be unavailable
+
+# VirtualService configuration (Istio)
+virtualService:
+  enabled: false
+  gateway: "istio-system/gateway"
+  hosts: []
+    # - my-app.example.com
+  http: []
+    # - match:
+    #   - uri:
+    #       prefix: /custom
+    #   route:
+    #   - destination:
+    #       host: other-service
+    #       port:
+    #         number: 80
+    

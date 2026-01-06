@@ -1,0 +1,15 @@
+{{- define "omnix.name" -}}
+{{- default .Values.nameOverride .Chart.name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{- define "omnix.fullname" -}}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else}}
+{{- printf "%s-%s" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+{{- end }}
+
+{{- define "omnix.namespace" -}}
+{{ default .Release.Namespace .Values.namespaceOverride | trunc 63 | trimSuffix "-" }}
+{{- end}}

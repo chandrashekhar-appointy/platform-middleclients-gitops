@@ -1,0 +1,262 @@
+---
+# Source: omnix/templates/pdb.yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata: 
+  name: my-application
+  namespace: namename
+  labels:
+    app: my-application
+    app: my-app
+    environment: production
+  annotations:
+    description: "Ensures high availability"
+spec:
+  minAvailable: 1
+  selector: 
+    matchLabels: 
+      app.kubernetes.io/name: my-application
+      pod-label: custom-pod
+---
+# Source: omnix/templates/serviceAccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: my-application
+  namespace: namename
+  labels:
+    app: my-application
+    app: my-app
+    environment: production
+    sa-label: custom-sa
+  annotations:
+    eks.amazonaws.com/role-arn: "arn:aws:iam::123456789:role/my-role"
+---
+# Source: omnix/templates/secret-envfrom.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secrets
+  namespace: namename
+type: Opaque
+stringData:
+  sql.connectionstring: "postgres://user:pass@10.10.10.10:5432/dbname?sslmode=disable"
+---
+# Source: omnix/templates/configmap-env.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-application-envvars
+  namespace: namename
+data:
+  ENVIRONMENT: "production"
+  FEATURE_FLAG_ENABLED: "true"
+  LOG_LEVEL: "info"
+---
+# Source: omnix/templates/configmap-envfrom.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: namename
+data:
+  auth.url: "https://abcd.com"
+---
+# Source: omnix/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: namename
+data:
+  nginx.conf: |
+---
+# Source: omnix/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ssl-certs
+  namespace: namename
+data:
+  cert.pem: |
+    YOUR_CERTIFICATE
+  key.pem: |
+    YOUR_KEY
+---
+# Source: omnix/templates/service.yaml
+apiVersion: v1
+kind: Service 
+metadata:
+  name: my-application
+  namespace: namename
+  labels: 
+    app: my-application
+    app: my-app
+    environment: production
+spec: 
+  type: ClusterIP
+  selector: 
+    app.kubernetes.io/name: my-application
+    app: my-app
+    environment: production
+  ports:
+    - name: grpc
+      port: 50051
+      targetPort: 50051
+    - name: http
+      port: 80
+      targetPort: 80
+    - name: https
+      port: 443
+      targetPort: 443
+---
+# Source: omnix/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-application
+  namespace: namename
+  labels: 
+    app: my-application
+    app: my-app
+    environment: production
+    deployment-label: custom-deployment
+  annotations:
+    description: "Example deployment"
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: my-application
+  strategy: 
+    type: RollingUpdate
+    rollingUpdate: 
+      maxUnavailable: 1
+      maxSurge: 1
+
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: my-application
+      annotations:
+        prometheus.io/scrape: "true"
+    spec:
+      imagePullSecrets:
+        - name: gcp-pull-secret
+      serviceAccountName: 
+      automountServiceAccountToken: true
+      securityContext:
+        fsGroup: 2000
+        runAsGroup: 3000
+        runAsUser: 1000
+      nodeSelector:
+        workload: general-purpose
+        zone: us-west-1a
+      volumes:
+        - name: nginx-config
+          configMap: 
+            name: nginx-config
+        - name: ssl-certs
+          configMap: 
+            name: ssl-certs
+      containers:
+        - name: my-application
+          image: nginx:1.21
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 50051
+              name: grpc
+            - containerPort: 80
+              name: http
+            - containerPort: 443
+              name: https
+          args:
+            - --config=/etc/config/app.conf
+          command:
+            - /bin/sh
+            - -c
+            - echo Starting application && exec nginx -g 'daemon off;'
+          env:
+            - name: ENVIRONMENT
+              value: "production"
+            - name: FEATURE_FLAG_ENABLED
+              value: "true"
+            - name: LOG_LEVEL
+              value: "info"
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+          volumeMounts:
+              - name: nginx-config
+                mountPath: "/etc/nginx/nginx.conf"
+                subPath: nginx.conf
+                readOnly: true
+              - name: ssl-certs
+                mountPath: "/etc/ssl/certs"
+                readOnly: true
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsUser: 2000  
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5  
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+---
+# Source: omnix/templates/hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata: 
+  name: my-application
+  namespace: namename
+  labels: 
+    app: my-application
+    app: my-app
+    environment: production
+    hpa-label: custom-hpa
+spec: 
+  scaleTargetRef: 
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-application
+  minReplicas: 2
+  maxReplicas: 10
+  metrics: 
+  - type: Resource
+    resource: 
+      name: cpu
+      target: 
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource 
+    resource: 
+      name: memory 
+      target: 
+        type: Utilization
+        averageUtilization: 80
+  # TODO: Add behavior

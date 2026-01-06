@@ -1,0 +1,30 @@
+{{- if .Values.pdb.enable }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "omnix.fullname" $ }}
+  namespace: {{ include "omnix.namespace" $}}
+  labels:
+    app: {{ include "omnix.fullname" $ }}       
+    {{- range $key, $value := .Values.global.labels }}
+    {{ $key }}: {{ $value }}
+    {{- end }}
+  {{- with .Values.pdb.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+spec: 
+  {{- if .Values.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.pdb.maxUnavailable }}
+  {{- else }}
+  minAvailable: {{ .Values.pdb.minAvailable | default 0 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "omnix.fullname" $ }}
+      {{- range $key, $value := .Values.pod.labels }}
+      {{ $key }}: {{ $value }}
+      {{- end }}
+{{- end}}

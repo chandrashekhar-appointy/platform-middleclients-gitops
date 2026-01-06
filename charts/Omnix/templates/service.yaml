@@ -1,0 +1,22 @@
+{{- with .Values.service }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "omnix.fullname" $ }}
+  namespace: {{ include "omnix.namespace" $}}
+  labels:
+    app: {{ include "omnix.fullname" $ }}
+    {{- range $key, $value := $.Values.global.labels }}
+    {{ $key}}: {{ $value }}
+    {{- end}}
+spec:
+  type: {{ .type }}
+  selector:
+    app.kubernetes.io/name: {{ include "omnix.fullname" $ }}
+  ports:       
+    {{- range $key, $value := $.Values.ports}}
+    - name: {{ $key }}
+      port: {{ $value }}
+      targetPort: {{ $value}}
+      {{- end }}
+{{- end}}

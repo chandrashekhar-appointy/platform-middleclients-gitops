@@ -1,0 +1,11 @@
+{{- with .Values.env }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "omnix.fullname" $ }}-envvars
+  namespace: {{ include "omnix.namespace" $}}
+data:
+  {{- range $key, $value := . }}
+  {{ $key }}: {{ $value | quote}}
+  {{- end}}
+{{- end}}

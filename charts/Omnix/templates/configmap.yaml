@@ -1,0 +1,15 @@
+{{- with .Values.volumes }}
+  {{- range .}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .name }}
+  namespace: {{ include "omnix.namespace" $}}
+data: 
+  {{- range .files }}
+  {{ .key }}: |
+{{ $.Files.Get .path | indent 4 }}
+  {{- end }}
+---
+  {{- end}}
+{{- end}}
