@@ -12,5 +12,4 @@ service:
 #     - 
   
 env:
-  - name: hieeeee
-    value: "heellllooo"
+  hieeeee: "heellllooo"
