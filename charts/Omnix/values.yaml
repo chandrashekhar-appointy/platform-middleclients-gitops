@@ -108,12 +108,12 @@ env: []
 
 # Environment variables from ConfigMaps/Secrets
 # Files should be in YAML format in files/ directory
-envFrom: 
+envFrom: {}
   # Load all keys from ConfigMap as environment variables
-  - name: app-config
-    type: configMap
-    files:
-      - path: files/configmap/app-config.yaml
+  # - name: app-config
+  #   type: configMap
+  #   files:
+  #     - path: files/configmap/app-config.yaml
 
   # # Load all keys from Secret as environment variables
   # - name: app-secrets
