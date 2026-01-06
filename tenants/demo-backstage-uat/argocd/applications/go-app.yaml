@@ -9,7 +9,7 @@ spec:
   project: demo-backstage-uat
   source:
     repoURL: https://github.com/chandrashekhar-appointy/platform-middleclients-gitops.git
-    targetRevision: HEAD
+    targetRevision: main
     path: charts/omnix
     helm:
       valueFiles:
