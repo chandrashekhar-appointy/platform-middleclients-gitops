@@ -1,0 +1,18 @@
+nameOverride: testing-goooo
+fullnameOverride: testing-goooo
+
+service:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+    - name: grpc
+      port: 50050
+      targetPort: 50050
+
+# virtualService:
+#   hosts:
+#     - 
+  
+env:
+  vinayyy: "vinayyadsfadsf"
