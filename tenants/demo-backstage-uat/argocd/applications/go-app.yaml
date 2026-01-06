@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/chandrashekhar-appointy/platform-middleclients-gitops.git
     targetRevision: main
-    path: charts/omnix
+    path: charts/Omnix
     helm:
       valueFiles:
         - ../../tenants/demo-backstage-uat/argocd/values/go-app.yaml
