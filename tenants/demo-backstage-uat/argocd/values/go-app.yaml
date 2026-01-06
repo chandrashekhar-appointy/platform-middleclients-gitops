@@ -1,0 +1,16 @@
+nameOverride: go-app
+fullnameOverride: go-app
+
+service:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+
+# virtualService:
+#   hosts:
+#     - 
+  
+env:
+  - name: hieeeee
+    value: "heellllooo"
