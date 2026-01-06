@@ -1,0 +1,16 @@
+nameOverride: go-goa-gone
+fullnameOverride: go-goa-gone
+
+service:
+  ports:
+    - name: {{ item.name }}
+      port: {{ item.port }}
+      targetPort: {{ item.port }}
+  
+virtualService:
+  hosts:
+    - 
+  
+env:
+  - name: {{ item.key }}
+    value: "{{ item.value }}"
