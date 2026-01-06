@@ -1,0 +1,22 @@
+nameOverride: testing-go-app
+fullnameOverride: testing-go-app
+
+service:
+
+  ports:
+    
+    - name: http
+      port: 8079
+      targetPort: 8079
+    
+
+
+# virtualService:
+#   hosts:
+#     - 
+  
+env:
+  
+  - name: hellooooo
+    value: "hellooo"
+  
